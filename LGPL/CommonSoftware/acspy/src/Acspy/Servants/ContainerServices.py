@@ -235,20 +235,27 @@ class ContainerServices(object):
                                                    activate)
             
             #return the narrowed reference
-            return self.__narrowComponentReference(corba_obj, comp_class)
+            component = self.__narrowComponentReference(corba_obj, comp_class)
             
         #if the user is trying to get a static default component
         elif (comp_idl_type is not None) and (comp_name is None) and \
              (comp_code is None) and (container_name is None) and \
              (is_dynamic == 0):
-            return self.getDefaultComponent(str(comp_idl_type))
+            component = self.getDefaultComponent(str(comp_idl_type))
             
         #user must be trying to get a dynamic component
         else:
-            return self.getDynamicComponent(comp_name,
+            component = self.getDynamicComponent(comp_name,
                                             comp_idl_type,
                                             comp_code,
                                             container_name)
+        try:
+            component.find_characteristic('foo')
+        except CORBA.Exception, ex:
+            component.find_characteristic('foo')
+
+        return component
+
                                             
     #--------------------------------------------------------------------------
     def __importComponentStubs(self,
